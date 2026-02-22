@@ -1,0 +1,61 @@
+---
+import type { Content } from "@/types";
+
+interface Props {
+  about: NonNullable<Content["about"]>;
+}
+const { about } = Astro.props;
+const hero = about.hero;
+---
+<section id="about-hero" class="bg-surface px-5 py-10 md:px-10 md:py-20 lg:px-[120px] lg:py-[80px]" aria-labelledby="about-hero-title">
+  <div class="mx-auto flex max-w-[1440px] flex-col items-center gap-6 md:flex-row md:items-start md:gap-12 lg:gap-20">
+    <div class="w-full shrink-0 md:order-2 md:w-[380px] lg:w-[450px]">
+      <div class="mx-auto h-[320px] w-[280px] overflow-hidden rounded-2xl border-2 border-accent/20 bg-surface-elevated md:mx-0 md:h-auto md:w-full md:max-h-[400px] md:aspect-[450/540] lg:max-h-[540px]">
+        <img
+          src={hero.imagePlaceholder}
+          alt="Treisy Jiménez — Scrum Master & Project Manager"
+          width={450}
+          height={540}
+          sizes="(max-width: 768px) 280px, 380px, 450px"
+          class="h-full w-full object-cover object-center"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+    <div class="flex w-full flex-1 flex-col items-center gap-4 md:order-1 md:items-start md:gap-8">
+      <div class="inline-flex w-fit items-center gap-2 rounded-full bg-accent/10 px-3 py-1.5 md:px-4 md:py-2">
+        <svg class="h-3 w-3 text-accent md:h-3.5 md:w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+        <span class="text-[11px] font-medium text-accent md:text-xs">{hero.badge}</span>
+      </div>
+      <h1 id="about-hero-title" class="text-center font-serif text-[32px] font-normal leading-tight text-primary md:text-left md:max-w-[480px] md:text-4xl lg:max-w-[580px] lg:text-5xl xl:text-[56px]">
+        {hero.title}
+      </h1>
+      <p class="max-w-[520px] text-center text-sm leading-relaxed text-muted md:text-left md:text-lg">
+        {hero.subtitle}
+      </p>
+      <div class="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:gap-4">
+        <a
+          href={hero.ctaPrimaryHref}
+          class="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface transition-opacity hover:opacity-90 md:inline-flex md:h-auto md:w-auto md:px-8 md:py-4"
+        >
+          <svg class="h-4 w-4 md:h-[18px] md:w-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          {hero.ctaPrimary}
+        </a>
+        <a
+          href={hero.ctaSecondaryHref}
+          class="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-border-light px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-surface-elevated md:inline-flex md:h-auto md:w-auto md:px-8 md:py-4"
+        >
+          {hero.ctaSecondary}
+          <svg class="h-4 w-4 md:h-[18px] md:w-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

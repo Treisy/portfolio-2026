@@ -1,0 +1,97 @@
+---
+import { getSiteConfig } from "@/lib/data/siteConfig";
+import { getContent } from "@/lib/data/content";
+const [site, content] = await Promise.all([getSiteConfig(), getContent()]);
+const { contact } = content;
+const { form, infoTitle } = contact;
+---
+<section id="contact" class="bg-surface-elevated px-6 py-16 sm:py-20 md:px-10 md:py-24 lg:px-[120px] lg:py-[100px]" aria-labelledby="contact-title">
+  <div class="mx-auto max-w-[1440px]">
+    <div class="mb-12 flex flex-col items-center gap-3 text-center sm:mb-16 sm:gap-4">
+      <p class="font-mono text-xs font-medium uppercase tracking-[0.3em] text-accent">{contact.label}</p>
+      <h2 id="contact-title" class="font-serif text-2xl font-normal text-primary sm:text-3xl md:text-4xl lg:text-[42px]">
+        {contact.title}
+      </h2>
+      <p class="max-w-[550px] text-sm text-subtle sm:text-base">
+        {contact.subtitle}
+      </p>
+    </div>
+    <div class="mx-auto flex max-w-4xl flex-col gap-12 lg:flex-row lg:items-start lg:justify-center lg:gap-16">
+      <form
+        class="w-full rounded-2xl border border-border bg-surface p-6 sm:p-8 lg:max-w-[500px] lg:p-10"
+        action="#"
+        method="post"
+      >
+        <div class="mb-5 grid grid-cols-1 gap-5 sm:mb-6 sm:gap-6 md:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label for="name" class="text-sm font-medium text-primary">{form.nameLabel}</label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              required
+              class="min-h-[44px] rounded-lg border border-border-light bg-surface-elevated px-4 py-3 text-primary placeholder:text-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              placeholder={form.namePlaceholder}
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="email" class="text-sm font-medium text-primary">{form.emailLabel}</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              required
+              class="min-h-[44px] rounded-lg border border-border-light bg-surface-elevated px-4 py-3 text-primary placeholder:text-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              placeholder={form.emailPlaceholder}
+            />
+          </div>
+        </div>
+        <div class="mb-5 flex flex-col gap-2 sm:mb-6">
+          <label for="subject" class="text-sm font-medium text-primary">{form.subjectLabel}</label>
+          <input
+            id="subject"
+            type="text"
+            name="subject"
+            class="min-h-[44px] rounded-lg border border-border-light bg-surface-elevated px-4 py-3 text-primary placeholder:text-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            placeholder={form.subjectPlaceholder}
+          />
+        </div>
+        <div class="mb-5 flex flex-col gap-2 sm:mb-6">
+          <label for="message" class="text-sm font-medium text-primary">{form.messageLabel}</label>
+          <textarea
+            id="message"
+            name="message"
+            rows={5}
+            required
+            class="min-h-[120px] rounded-lg border border-border-light bg-surface-elevated px-4 py-3 text-primary placeholder:text-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            placeholder={form.messagePlaceholder}
+          />
+        </div>
+        <button
+          type="submit"
+          class="flex min-h-[44px] w-full items-center justify-center rounded-lg bg-accent py-4 text-base font-semibold text-surface transition-opacity hover:opacity-90"
+        >
+          {form.submitLabel}
+        </button>
+      </form>
+      <div class="flex flex-col gap-6 lg:max-w-[350px] lg:gap-8">
+        <h3 class="text-lg font-semibold text-primary sm:text-xl">{infoTitle}</h3>
+        <div class="flex flex-col gap-4 sm:gap-6">
+          <a href={`mailto:${site.social.email}`} class="text-muted hover:text-primary">
+            {site.social.email}
+          </a>
+          {site.social.linkedin && (
+            <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer" class="text-muted hover:text-primary">
+              LinkedIn
+            </a>
+          )}
+          {site.social.github && (
+            <a href={site.social.github} target="_blank" rel="noopener noreferrer" class="text-muted hover:text-primary">
+              GitHub
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

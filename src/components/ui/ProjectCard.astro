@@ -1,0 +1,46 @@
+---
+import type { Project } from "@/types";
+
+interface Props {
+  project: Project;
+  /** Show role and year below description (e.g. on list page) */
+  showMeta?: boolean;
+}
+const { project, showMeta = false } = Astro.props;
+---
+<a
+  href={`/projects/${project.slug}`}
+  class="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface-elevated transition-colors hover:border-border-light"
+  aria-labelledby={`project-${project.id}-title`}
+>
+  <div class="relative aspect-[16/10] w-full overflow-hidden bg-surface">
+    <img
+      src={project.image.src}
+      alt={project.image.alt}
+      width={640}
+      height={400}
+      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
+      loading="lazy"
+    />
+  </div>
+  <div class="flex flex-col gap-3 p-4 sm:gap-4 sm:p-6">
+    <h2 id={`project-${project.id}-title`} class="font-semibold text-primary group-hover:text-accent sm:text-lg">
+      {project.title}
+    </h2>
+    <p class="line-clamp-2 text-[14px] leading-relaxed text-subtle sm:text-[15px]">
+      {project.description}
+    </p>
+    {showMeta && (
+      <p class="text-xs text-muted">
+        {project.role}
+        {project.year ? ` · ${project.year}` : ""}
+      </p>
+    )}
+    <div class="flex flex-wrap gap-2">
+      {project.tags.map((tag) => (
+        <span class="rounded bg-surface px-2 py-0.5 text-xs text-muted">{tag}</span>
+      ))}
+    </div>
+  </div>
+</a>

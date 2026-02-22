@@ -1,0 +1,67 @@
+---
+import type { Content } from "@/types";
+import type { WorkExperience } from "@/types";
+import { formatExperienceDate } from "@/lib/utils";
+
+interface Props {
+  about: NonNullable<Content["about"]>;
+  experience: WorkExperience[];
+}
+const { about, experience } = Astro.props;
+const { label, title, subtitle, scrollHint } = about.experience;
+---
+<section class="bg-surface-elevated px-5 py-14 md:px-10 md:py-16 lg:px-[120px] lg:py-[100px]" aria-labelledby="about-exp-title">
+  <div class="mx-auto max-w-[1440px] flex flex-col gap-8 md:gap-10 lg:gap-16">
+    <header class="flex flex-col items-center gap-4 text-center">
+      <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">{label}</p>
+      <h2 id="about-exp-title" class="font-serif text-3xl font-normal text-primary md:text-4xl lg:text-[42px]">
+        {title}
+      </h2>
+      <p class="max-w-[600px] text-base text-subtle">{subtitle}</p>
+    </header>
+
+    <div
+      class="flex flex-col gap-4 md:gap-6 lg:gap-8 max-h-[min(440px,55vh)] overflow-y-auto overscroll-contain rounded-xl pr-1 scroll-smooth md:max-h-[min(480px,50vh)]"
+      style="scrollbar-gutter: stable;"
+      tabindex="0"
+      role="region"
+      aria-label="Experience timeline"
+    >
+      {experience.map((exp) => (
+        <article
+          class="rounded-2xl border border-border bg-surface p-5 md:p-8 lg:p-8 flex flex-col gap-6 md:flex-row md:gap-10"
+          aria-labelledby={`exp-${exp.id}-role`}
+        >
+          <div class="flex shrink-0 flex-col gap-2 md:w-[200px]">
+            <p class="font-mono text-sm font-medium text-accent">
+              {formatExperienceDate(exp.startDate, exp.endDate)}
+            </p>
+            <p class="text-sm text-subtle">{exp.company}</p>
+          </div>
+          <div class="flex min-w-0 flex-1 flex-col gap-3">
+            <h3 id={`exp-${exp.id}-role`} class="font-serif text-xl font-normal text-primary md:text-2xl">
+              {exp.role}
+            </h3>
+            <p class="text-[15px] leading-relaxed text-muted md:text-base">{exp.description}</p>
+            {exp.highlights && exp.highlights.length > 0 && (
+              <ul class="list-inside list-disc space-y-1 text-[14px] text-muted md:text-sm" aria-label="Key highlights">
+                {exp.highlights.map((h) => (
+                  <li>{h}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {scrollHint && (
+      <p class="flex items-center justify-center gap-2 text-[13px] italic text-subtle/70 md:text-sm" aria-hidden="true">
+        {scrollHint}
+        <svg class="h-4 w-4 md:h-4 md:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </p>
+    )}
+  </div>
+</section>

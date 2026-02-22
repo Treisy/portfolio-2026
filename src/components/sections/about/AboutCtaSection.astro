@@ -1,0 +1,41 @@
+---
+import type { Content } from "@/types";
+
+interface Props {
+  about: NonNullable<Content["about"]>;
+}
+const { about } = Astro.props;
+const cta = about.cta;
+const downloadHref = about.hero.ctaPrimaryHref;
+const contactHref = "/#contact";
+---
+<section class="bg-surface px-5 py-14 md:px-10 md:py-16 lg:px-[120px] lg:py-[100px]" aria-labelledby="about-cta-title">
+  <div class="mx-auto max-w-[1440px] flex flex-col items-center gap-6 text-center md:gap-8">
+    <h2 id="about-cta-title" class="font-serif text-3xl font-normal text-primary md:text-4xl lg:text-[48px]">
+      {cta.title}
+    </h2>
+    <p class="max-w-[600px] text-base leading-relaxed text-subtle md:text-lg">
+      {cta.subtitle}
+    </p>
+    <div class="flex flex-col gap-4 sm:flex-row sm:gap-4">
+      <a
+        href={downloadHref}
+        class="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-base font-semibold text-surface transition-opacity hover:opacity-90 md:px-9 md:py-4"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        {cta.downloadLabel}
+      </a>
+      <a
+        href={contactHref}
+        class="inline-flex items-center justify-center gap-2 rounded-lg border border-accent px-6 py-3 text-base font-semibold text-accent transition-colors hover:bg-accent/10 md:px-9 md:py-4"
+      >
+        {cta.contactLabel}
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

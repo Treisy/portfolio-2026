@@ -1,0 +1,171 @@
+{
+  "hero": {
+    "badge": "Available for new projects",
+    "mobileLabel": "Project Manager & Scrum Master",
+    "title": "Turning ideas into successful digital products",
+    "subtitle": "Certified Scrum Master, Project Manager, and Web Developer based in Costa Rica with 20+ years of experience leading teams and building solutions that drive results.",
+    "mobileSubtitle": "I help businesses transform their vision into reality through agile methodologies and hands-on project execution.",
+    "ctaPrimary": "Get in touch",
+    "ctaPrimaryHref": "#contact",
+    "ctaSecondary": "View projects",
+    "ctaSecondaryHref": "#portfolio",
+    "ctaPrimaryMobile": "View My Work",
+    "ctaSecondaryMobile": "Book a Call",
+    "imagePlaceholder": "/images/treisy-avatar.png"
+  },
+  "services": {
+    "label": "Services",
+    "title": "Solutions to boost your business",
+    "subtitle": "I offer specialized services that combine agile methodologies, project management, and technical development.",
+    "items": [
+      {
+        "title": "Scrum Master",
+        "description": "I facilitate agile teams, remove impediments, and guide Scrum adoption to maximize value delivered in every sprint.",
+        "icon": "scrum"
+      },
+      {
+        "title": "Project Manager",
+        "description": "I plan, execute, and deliver projects on time and within budget, aligning stakeholders and managing risks.",
+        "icon": "pm"
+      },
+      {
+        "title": "Web Development",
+        "description": "I build modern, scalable, and high-performance web applications using the best technologies in the market.",
+        "icon": "dev"
+      }
+    ]
+  },
+  "portfolio": {
+    "label": "Portfolio",
+    "title": "Featured Projects",
+    "viewAllLabel": "View all projects",
+    "viewAllHref": "/projects",
+    "listTitle": "My Work & Projects",
+    "listSubtitle": "A collection of projects showcasing expertise in agile methodologies, project management, and web development across various industries."
+  },
+  "projectDetail": {
+    "backLabel": "All projects",
+    "breadcrumbPortfolio": "Portfolio",
+    "viewLiveLabel": "View live",
+    "githubLabel": "GitHub",
+    "roleLabel": "Role",
+    "yearLabel": "Year",
+    "techStackLabel": "Tech stack",
+    "overviewLabel": "OVERVIEW",
+    "challengeTitle": "The Challenge",
+    "roleSectionLabel": "MY ROLE",
+    "resultsLabel": "RESULTS",
+    "resultsTitle": "Impact & Achievements",
+    "processLabel": "PROCESS",
+    "processTitle": "How I Approached It",
+    "galleryLabel": "GALLERY",
+    "galleryTitle": "Project Screenshots",
+    "moreProjectsLabel": "More projects",
+    "prevLabel": "Previous",
+    "nextLabel": "Next"
+  },
+  "blogDetail": {
+    "backLabel": "Back to Blog",
+    "tagsLabel": "Tags:",
+    "shareLabel": "Share:"
+  },
+  "blog": {
+    "label": "BLOG",
+    "title": "Insights & Articles",
+    "subtitle": "Thoughts on agile leadership, project management, and the evolving tech landscape.",
+    "listSubtitle": "Exploring agile methodologies, project management, and web development",
+    "viewAllLabel": "View All Articles",
+    "viewAllHref": "/blog",
+    "filters": [
+      { "id": "all", "label": "All" },
+      { "id": "agile", "label": "Agile" },
+      { "id": "leadership", "label": "Leadership" },
+      { "id": "web-dev", "label": "Web Dev" }
+    ],
+    "posts": [
+      {
+        "title": "Agile leadership in remote teams",
+        "excerpt": "Practical tips for keeping distributed teams aligned and productive.",
+        "slug": "agile-leadership-remote-teams",
+        "category": "Agile",
+        "date": "Feb 2026",
+        "body": [
+          { "type": "h2", "text": "The Agile Promise vs Reality" },
+          { "type": "p", "text": "Organizations worldwide have embraced agile methodologies with the promise of faster delivery, better quality, and happier teams. Yet study after study shows that a significant percentage of agile transformations fail to achieve their goals." },
+          { "type": "quote", "text": "Agile is not a methodology. It's a mindset. You can't install a mindset — you have to grow one.", "attribution": "Jeff Sutherland" },
+          { "type": "h2", "text": "The Three Pillars of Successful Transformation" },
+          { "type": "p", "text": "Through my experience, I've identified three critical pillars that must be in place for an agile transformation to succeed: leadership alignment, team empowerment, and continuous improvement. Missing even one of these creates significant risk of failure." }
+        ]
+      },
+      {
+        "title": "From project manager to Scrum Master",
+        "excerpt": "How I made the transition and what I learned along the way.",
+        "slug": "project-manager-to-scrum-master",
+        "category": "Leadership",
+        "date": "Jan 2026"
+      },
+      {
+        "title": "Tech trends that matter in 2026",
+        "excerpt": "A focused look at tools and practices worth adopting.",
+        "slug": "tech-trends-2026",
+        "category": "Web Dev",
+        "date": "Jan 2026"
+      }
+    ]
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Ready to work together?",
+    "subtitle": "Tell me about your project and let's find the best way to help you achieve your goals.",
+    "form": {
+      "nameLabel": "Name",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "Project or inquiry",
+      "messageLabel": "Message",
+      "messagePlaceholder": "How can I help?",
+      "submitLabel": "Send message"
+    },
+    "infoTitle": "Contact Information"
+  },
+  "about": {
+    "hero": {
+      "badge": "Scrum Master & Project Manager",
+      "title": "Hi, I'm Treisy Jiménez",
+      "subtitle": "A passionate Certified Scrum Master, Project Manager, and Web Developer based in Costa Rica. With over 20 years of experience, I help teams deliver exceptional results through agile methodologies and strategic leadership.",
+      "imagePlaceholder": "/images/treisy-avatar.png",
+      "ctaPrimary": "Download CV",
+      "ctaPrimaryHref": "/cv.pdf",
+      "ctaSecondary": "Let's Connect",
+      "ctaSecondaryHref": "/#contact"
+    },
+    "experience": {
+      "label": "EXPERIENCE",
+      "title": "Professional Journey",
+      "subtitle": "Over 20 years of experience leading teams and delivering successful projects across various industries",
+      "scrollHint": "Scroll to see more"
+    },
+    "education": {
+      "label": "EDUCATION",
+      "title": "Academic Background",
+      "subtitle": "Building a strong foundation through continuous academic growth and learning"
+    },
+    "skills": {
+      "label": "SKILLS",
+      "title": "Expertise & Capabilities",
+      "subtitle": "A diverse skill set combining technical expertise with leadership and agile methodologies"
+    },
+    "certifications": {
+      "label": "CERTIFICATIONS",
+      "title": "Professional Credentials"
+    },
+    "cta": {
+      "title": "Let's Work Together",
+      "subtitle": "Ready to transform your team's productivity? Download my CV or get in touch to discuss your project.",
+      "downloadLabel": "Download CV",
+      "contactLabel": "Contact Me"
+    }
+  }
+}

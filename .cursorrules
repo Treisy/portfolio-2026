@@ -1,0 +1,485 @@
+# ============================================================
+# CURSOR RULES — Personal Portfolio | Full-Stack Developer
+# Stack: AstroJS + TypeScript + Tailwind CSS
+# ============================================================
+
+## PROJECT IDENTITY
+
+This is a professional portfolio for a Full-Stack Developer with 19+ years of experience
+in software development, project management, and operations. The site must convey
+technical authority, versatility, and professionalism — without feeling generic.
+
+---
+
+## TECH STACK
+
+- **Framework**: Astro 4.x (Static Site Generation + Islands Architecture)
+- **Language**: TypeScript strict mode
+- **Styles**: Tailwind CSS v3 with custom configuration
+- **Fonts**: Variable fonts via @fontsource or Google Fonts (with display=swap)
+- **Icons**: astro-icon + iconify (NO Font Awesome)
+- **Images**: `<Image />` component from `astro:assets` — ALWAYS
+- **Animations**: Native CSS + Intersection Observer (no heavy dependencies)
+- **Data Layer**: JSON files (current) → Django REST API (planned migration)
+
+---
+
+## DATA LAYER ARCHITECTURE — CURRENT & FUTURE
+
+### Current approach: JSON files
+
+All portfolio data lives in `src/data/` as typed TypeScript files exporting JSON-shaped data.
+This allows Cursor to generate a clean abstraction layer that can be swapped later with zero
+component rewrites.
+
+```
+src/
+└── data/
+    ├── siteConfig.ts     # Global config: name, title, social links, SEO defaults
+    ├── experience.ts     # Work history timeline
+    ├── skills.ts         # Technical and management skills by category
+    ├── projects.ts       # Portfolio projects (later: from Content Collections or API)
+    ├── certifications.ts # Professional certifications
+    └── index.ts          # Barrel export — always import from here
+```
+
+### Abstraction rule: ALWAYS use a data service layer
+
+Never import JSON data directly into components.
+Always go through a service function in `src/lib/data/`:
+
+```typescript
+// src/lib/data/projects.ts
+import type { Project } from '@/types';
+import { projects } from '@/data';
+
+// This function signature stays the same when switching to API
+export async function getProjects(): Promise<Project[]> {
+  return projects;
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | undefined> {
+  return projects.find((p) => p.slug === slug);
+}
+
+export async function getFeaturedProjects(): Promise<Project[]> {
+  return projects.filter((p) => p.featured);
+}
+```
+
+### Future migration: Django REST API
+
+When the Django backend is ready, only the service files in `src/lib/data/` need to change.
+Components remain untouched. The migration pattern will be:
+
+```typescript
+// src/lib/data/projects.ts — AFTER migration
+import type { Project } from '@/types';
+
+const API_BASE = import.meta.env.PUBLIC_API_URL;
+
+export async function getProjects(): Promise<Project[]> {
+  const res = await fetch(`${API_BASE}/api/projects/`);
+  if (!res.ok) throw new Error('Failed to fetch projects');
+  return res.json();
+}
+```
+
+### Design rules to support this migration:
+
+- All data-fetching logic MUST live in `src/lib/data/` service files — never inline in components.
+- All Astro pages must call service functions (not import data directly) inside their frontmatter.
+- Define all TypeScript types in `src/types/` first, matching the expected Django API response shape.
+- Use `async/await` in all data-fetching functions, even when the data is currently synchronous JSON.
+- Add a `PUBLIC_API_URL` variable to `.env.example` even if unused today.
+- Error handling should be built in from day one (try/catch with fallback UI).
+
+---
+
+## PROJECT STRUCTURE
+
+```
+src/
+├── components/
+│   ├── ui/              # Atomic reusable components (Button, Badge, Card, etc.)
+│   ├── sections/        # Portfolio sections (Hero, About, Skills, Experience, etc.)
+│   └── layout/          # Header, Footer, Navigation
+├── layouts/
+│   └── BaseLayout.astro # Main layout with full SEO setup
+├── pages/
+│   ├── index.astro
+│   ├── projects/
+│   │   └── [slug].astro # Dynamic project pages
+│   └── 404.astro
+├── content/
+│   ├── config.ts        # Content Collections schema (for MDX project details)
+│   └── projects/        # Optional MDX files for long-form project case studies
+├── data/                # JSON data source (current)
+├── lib/
+│   ├── data/            # Data service layer (abstraction over JSON / future API)
+│   └── utils.ts         # Helpers, formatters, cn() utility
+├── types/
+│   └── index.ts         # All TypeScript interfaces and types
+├── styles/
+│   └── global.css       # CSS variables, reset, base styles, fluid typography
+└── public/
+    ├── robots.txt
+    ├── favicon.svg
+    ├── apple-touch-icon.png
+    └── site.webmanifest
+```
+
+---
+
+## TYPESCRIPT RULES
+
+- Always use explicit types. NEVER use `any`.
+- Define all interfaces in `src/types/index.ts` or domain-specific files under `src/types/`.
+- Use `type` for simple types and unions, `interface` for objects that may be extended.
+- Astro component props always use `interface Props { ... }` inside the frontmatter.
+- Use the `satisfies` operator when appropriate.
+- Export all types from `src/types/index.ts` as barrel exports.
+- Type all data shapes to match the future Django REST API response structure.
+
+```typescript
+// ✅ Correct
+interface Props {
+  title: string;
+  description?: string;
+  variant: 'primary' | 'secondary';
+}
+
+// ❌ Incorrect
+const { title, description, variant } = Astro.props as any;
+```
+
+### Core types (define these first in src/types/index.ts):
+
+```typescript
+export interface Project {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;    // max 160 chars for SEO
+  longDescription?: string;
+  techStack: string[];
+  tags: string[];
+  featured: boolean;
+  image: { src: string; alt: string };
+  liveUrl?: string;
+  githubUrl?: string;
+  role: string;
+  company?: string;
+  year: number;
+}
+
+export interface WorkExperience {
+  id: number;
+  company: string;
+  role: string;
+  startDate: string;      // ISO format: "2018-03"
+  endDate?: string;       // undefined = current position
+  description: string;
+  highlights: string[];
+  techStack: string[];
+}
+
+export interface Skill {
+  name: string;
+  category: 'frontend' | 'backend' | 'devops' | 'management' | 'tools';
+  level: 'expert' | 'proficient' | 'familiar';
+}
+
+export interface Certification {
+  name: string;
+  issuer: string;
+  year: number;
+  credentialUrl?: string;
+  badgeImage?: string;
+}
+
+export interface SiteConfig {
+  name: string;
+  title: string;
+  description: string;
+  siteUrl: string;
+  social: {
+    github?: string;
+    linkedin?: string;
+    email: string;
+  };
+}
+```
+
+---
+
+## ASTRO RULES
+
+- Use `.astro` for UI components and pages.
+- Use `client:visible` for interactive islands (lazy hydration).
+- Use `client:idle` for non-critical interactive components.
+- NEVER use `client:load` except for critical above-the-fold elements.
+- Prefer pure Astro components (zero JS) whenever possible.
+- `getStaticPaths()` for all dynamic routes.
+- Always explicitly declare `export const prerender = true` on static pages.
+- Call data service functions inside page frontmatter, not inside components.
+
+```astro
+---
+// pages/projects/[slug].astro
+import { getProjectBySlug, getProjects } from '@/lib/data/projects';
+import type { Project } from '@/types';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+```
+
+---
+
+## TAILWIND CSS RULES
+
+- Use utility classes. NEVER inline CSS for static values.
+- Use `@apply` sparingly and only in `global.css` for recurring patterns.
+- Mobile-first breakpoints: `sm:`, `md:`, `lg:`, `xl:`, `2xl:`
+- Custom palette and fonts defined in `tailwind.config.mjs` using CSS variables.
+- Use `clsx` + `cn()` helper for conditional classes.
+- Semantic class grouping: layout → spacing → sizing → typography → visual → interactive.
+
+```astro
+<!-- ✅ Correct: mobile-first, semantic grouping -->
+<div class="flex flex-col gap-4 p-4 md:flex-row md:gap-8 md:p-8">
+
+<!-- ❌ Incorrect: desktop-first, unorganized -->
+<div class="lg:flex-row p-8 flex-col gap-4 lg:gap-8 flex lg:p-4">
+```
+
+---
+
+## SEO — MANDATORY RULES
+
+### BaseLayout.astro must ALWAYS include:
+
+```astro
+---
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonicalURL?: string;
+  type?: 'website' | 'article';
+  publishedDate?: string;
+}
+const { title, description, image, canonicalURL, type = 'website' } = Astro.props;
+const canonical = canonicalURL ?? Astro.url.href;
+---
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary Meta -->
+  <title>{title} | [Your Name] — Full-Stack Developer</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="[Your Name]" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={canonical} />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content={type} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={image} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+  <!-- Font preconnects -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Favicon set -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+</head>
+```
+
+### JSON-LD Person schema (in src/data/siteConfig.ts):
+
+```typescript
+export const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "[Your Name]",
+  "jobTitle": "Full-Stack Developer & Engineering Manager",
+  "url": "https://[your-domain].com",
+  "sameAs": [
+    "https://linkedin.com/in/[profile]",
+    "https://github.com/[username]"
+  ],
+  "knowsAbout": [
+    "Java", "TypeScript", "React", "AstroJS",
+    "Scrum", "Project Management", "Django", "REST APIs"
+  ]
+};
+```
+
+### Per-page SEO rules:
+
+- Unique meta description on every page: 150–160 characters.
+- One H1 per page → H2 for sections → H3 for subsections.
+- Descriptive slugs in English: `/projects/kanban-metrics-dashboard`.
+- Descriptive `alt` text on ALL images. Empty `alt=""` only for decorative images.
+- Lazy loading on all below-the-fold images.
+- `@astrojs/sitemap` integration enabled and `site` URL set in `astro.config.mjs`.
+
+---
+
+## ACCESSIBILITY (A11Y)
+
+- **WCAG 2.1 AA** as minimum standard.
+- Minimum contrast ratio: 4.5:1 for body text, 3:1 for large text.
+- All interactive elements must be keyboard accessible (`Tab`, `Enter`, `Space`).
+- Focus always visible — never `outline: none` without a visual replacement.
+- `aria-label` on icon-only buttons and links.
+- `aria-current="page"` on active navigation links.
+- Skip link at the top: `<a href="#main-content" class="sr-only focus:not-sr-only">Skip to content</a>`.
+- Semantic roles: `<main>`, `<nav>`, `<section aria-labelledby="...">`, `<aside>`.
+- Always add `prefers-reduced-motion` fallback for ALL animations.
+
+```css
+/* Required in global.css */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+---
+
+## RESPONSIVE DESIGN
+
+- **Mobile-first** — no exceptions.
+- Standard Tailwind breakpoints (sm: 640px, md: 768px, lg: 1024px, xl: 1280px).
+- Use `clamp()` for fluid typography and spacing.
+- Grid layouts with `auto-fill` / `auto-fit` for card components.
+- Images must have correct `sizes` attribute.
+- Minimum touch target size: 44×44px on mobile.
+- Zero horizontal overflow at any breakpoint.
+- Test at: 320px, 375px, 768px, 1024px, 1440px.
+
+```css
+/* Fluid typography in global.css */
+:root {
+  --font-size-sm:   clamp(0.875rem, 0.8rem + 0.2vw, 1rem);
+  --font-size-base: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);
+  --font-size-lg:   clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --font-size-xl:   clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  --font-size-2xl:  clamp(2rem, 1.5rem + 2vw, 3.5rem);
+}
+```
+
+---
+
+## PERFORMANCE
+
+- **Core Web Vitals targets**: LCP < 2.5s, FID < 100ms, CLS < 0.1
+- Images: WebP/AVIF via `astro:assets`, always define `width` and `height`.
+- Fonts: `font-display: swap`, subset only required characters.
+- No external CSS frameworks (Bootstrap, etc.) — Tailwind only.
+- Lazy load all below-the-fold content.
+- Prefetch probable navigation routes with `<link rel="prefetch">`.
+- Minimize JS bundle: prefer Astro components over JS-heavy frameworks.
+
+---
+
+## PORTFOLIO SECTIONS
+
+Build these sections in order:
+
+1. **Hero** — Name, title, CTA (view projects / contact me), professional photo
+2. **About** — Professional bio, values, what sets you apart
+3. **Skills** — Technical and management skills, organized by category
+4. **Experience** — Work history timeline (Intel, HP, Soom, Kleeen, TJV)
+5. **Projects** — Featured projects grid with tech stack, role, and links
+6. **Certifications** — Scrum Master, CAPM, and other credentials
+7. **Contact** — Contact form + LinkedIn / GitHub links
+
+---
+
+## NAMING CONVENTIONS
+
+- **Astro components**: PascalCase → `HeroSection.astro`, `ProjectCard.astro`
+- **Pages**: kebab-case → `about.astro`, `contact.astro`
+- **TypeScript variables**: camelCase → `projectData`, `siteConfig`
+- **Constants**: SCREAMING_SNAKE_CASE → `MAX_FEATURED_PROJECTS`
+- **Content files**: kebab-case → `kanban-dashboard.mdx`
+- **Assets**: kebab-case → `profile-photo.webp`, `project-kanban-thumbnail.webp`
+- **Data service functions**: `get[Resource]()`, `get[Resource]By[Field]()`
+
+---
+
+## REQUIRED CONFIGURATION FILES
+
+- `astro.config.mjs` — with sitemap integration, compress, and `site` URL
+- `tailwind.config.mjs` — custom colors, fonts, and breakpoints
+- `tsconfig.json` — strict mode, path aliases (`@/components`, `@/layouts`, `@/lib`, `@/types`, `@/data`)
+- `.eslintrc.cjs` — TypeScript + Astro rules
+- `.prettierrc` — consistent formatting
+- `.env.example` — include `PUBLIC_API_URL=` (unused now, ready for Django)
+- `public/robots.txt` — allow all, reference sitemap
+- `public/sitemap.xml` — auto-generated by `@astrojs/sitemap`
+
+---
+
+## ANTI-PATTERNS — NEVER DO THIS
+
+- ❌ Import data directly into components — always use service functions from `src/lib/data/`
+- ❌ Hardcode data inline in components — use `siteConfig.ts` and typed data files
+- ❌ Use `any` in TypeScript
+- ❌ Use `document.querySelector` in Astro components (use typed `<script>` tags instead)
+- ❌ Inline CSS for static values
+- ❌ Images without `width`, `height`, and `alt`
+- ❌ `!important` in CSS except for documented override utilities
+- ❌ External fonts without `preconnect`
+- ❌ Pages without a unique meta description
+- ❌ Icon-only links without `aria-label`
+- ❌ Animations without `prefers-reduced-motion` fallback
+- ❌ Data fetching logic inside components or layouts
+
+---
+
+## PREFERRED PATTERNS
+
+- ✅ All data access through `src/lib/data/` service functions — async by default
+- ✅ `<Image />` from `astro:assets` for every image
+- ✅ Content Collections for long-form project case studies
+- ✅ `import.meta.env` for all environment variables
+- ✅ `Astro.url` for dynamic canonical URLs
+- ✅ Islands Architecture: JS only where truly needed
+- ✅ Semantic HTML first, classes second
+- ✅ Dark mode with `class` strategy + `prefers-color-scheme` fallback
+- ✅ Error boundaries in critical components (especially data-fetching ones)
+- ✅ Loading states on all forms and async interactions
+- ✅ Type-safe data from day one — types match future Django API response shape
+
+---
+
+*Portfolio — Full-Stack Developer | AstroJS + TypeScript + Tailwind CSS*
+*Data layer: JSON (current) → Django REST API (planned)*
+*Last updated: February 2026*

@@ -1,0 +1,31 @@
+---
+import ProjectCard from "@/components/ui/ProjectCard.astro";
+import { getFeaturedProjects } from "@/lib/data/projects";
+import { getContent } from "@/lib/data/content";
+const [featured, content] = await Promise.all([getFeaturedProjects(), getContent()]);
+const { portfolio } = content;
+---
+<section id="portfolio" class="bg-surface px-6 py-16 sm:py-20 md:px-10 md:py-24 lg:px-[120px] lg:py-[100px]" aria-labelledby="portfolio-title">
+  <div class="mx-auto max-w-[1440px]">
+    <div class="mb-10 flex flex-col gap-4 sm:mb-16 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="font-mono text-xs font-medium uppercase tracking-[0.3em] text-accent">{portfolio.label}</p>
+        <h2 id="portfolio-title" class="mt-3 font-serif text-2xl font-normal text-primary sm:mt-4 sm:text-3xl md:text-4xl lg:text-[42px]">
+          {portfolio.title}
+        </h2>
+      </div>
+      <a
+        href={portfolio.viewAllHref}
+        class="inline-flex min-h-[44px] w-fit items-center justify-center gap-2 rounded-lg border border-border-light px-5 py-3 text-sm font-medium text-primary transition-colors hover:border-muted sm:px-6"
+      >
+        {portfolio.viewAllLabel}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+      {featured.slice(0, 3).map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </div>
+</section>

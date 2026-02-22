@@ -1,0 +1,38 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import ProjectCard from "@/components/ui/ProjectCard.astro";
+import { getContent } from "@/lib/data/content";
+import { getProjects } from "@/lib/data/projects";
+
+const [content, projects] = await Promise.all([getContent(), getProjects()]);
+const portfolio = content.portfolio;
+const title = portfolio.listTitle ?? portfolio.title;
+const subtitle = portfolio.listSubtitle ?? "A collection of projects showcasing agile, project management, and web development.";
+const metaDescription = subtitle.slice(0, 160);
+---
+<BaseLayout title="Portfolio" description={metaDescription}>
+  <Header />
+  <main id="main-content" class="min-h-screen bg-surface">
+    <section class="px-6 py-14 md:px-10 md:py-20 lg:px-[120px] lg:py-24" aria-labelledby="portfolio-list-title">
+      <div class="mx-auto max-w-[1440px]">
+        <header class="mb-10 flex flex-col gap-4 text-center md:mb-16">
+          <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">{portfolio.label}</p>
+          <h1 id="portfolio-list-title" class="font-serif text-3xl font-normal text-primary md:text-4xl lg:text-[52px]">
+            {title}
+          </h1>
+          <p class="mx-auto max-w-[700px] text-base text-subtle md:text-lg">
+            {subtitle}
+          </p>
+        </header>
+        <div class="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
+            <ProjectCard project={project} showMeta={true} />
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

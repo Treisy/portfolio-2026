@@ -1,0 +1,62 @@
+---
+import { getContent } from "@/lib/data/content";
+const content = await getContent();
+const { hero } = content;
+const mobileLabel = hero.mobileLabel ?? hero.badge;
+const mobileSubtitle = hero.mobileSubtitle ?? hero.subtitle;
+const ctaPrimaryMobile = hero.ctaPrimaryMobile ?? hero.ctaPrimary;
+const ctaSecondaryMobile = hero.ctaSecondaryMobile ?? hero.ctaSecondary;
+---
+<section id="hero" class="bg-surface px-5 py-10 md:px-10 md:py-20 lg:px-[120px] lg:py-[80px]" aria-labelledby="hero-title">
+  <div class="mx-auto flex max-w-[1440px] flex-col items-center gap-6 md:flex-row md:items-start md:gap-12 lg:gap-20">
+    <!-- Mobile: image first, centered 200×260 (Pencil Landing - Mobile) -->
+    <div class="w-full shrink-0 md:order-2 md:w-[380px] lg:w-[450px]">
+      <div class="mx-auto h-[260px] w-[200px] overflow-hidden rounded-xl bg-surface-elevated md:mx-0 md:h-auto md:w-full md:max-h-[400px] md:rounded-2xl md:border-2 md:border-accent/20 md:aspect-5/6 lg:max-h-[540px]">
+        <img
+          src={hero.imagePlaceholder}
+          alt="Treisy Jiménez — Full-Stack Developer"
+          width={450}
+          height={540}
+          sizes="(max-width: 768px) 200px, 380px, 450px"
+          class="h-full w-full object-cover object-center"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+    <!-- Content: mobile center / desktop start -->
+    <div class="flex w-full flex-1 flex-col items-center gap-4 md:order-1 md:items-start md:gap-8">
+      <!-- Desktop badge (hidden on mobile; mobile uses label below) -->
+      <div class="hidden md:inline-flex w-fit items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-4 py-2">
+        <span class="h-2 w-2 rounded-full bg-accent" aria-hidden="true"></span>
+        <span class="text-xs font-medium uppercase tracking-wide text-accent">{hero.badge}</span>
+      </div>
+      <!-- Mobile label (Pencil: 9px, center) -->
+      <p class="text-center text-[9px] font-normal uppercase tracking-[0.2em] text-accent md:hidden">{mobileLabel}</p>
+      <h1 id="hero-title" class="text-center font-serif text-[28px] font-normal leading-tight text-primary md:text-left md:max-w-[480px] md:text-3xl md:text-[2.5rem] lg:max-w-[580px] lg:text-5xl xl:text-[56px]">
+        {hero.title}
+      </h1>
+      <p class="max-w-[520px] text-center text-[13px] leading-relaxed text-muted md:text-left md:text-lg">
+        <span class="md:hidden">{mobileSubtitle}</span>
+        <span class="hidden md:inline">{hero.subtitle}</span>
+      </p>
+      <!-- CTAs: mobile full-width stacked (Pencil: 48px height); desktop inline -->
+      <div class="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:gap-4">
+        <a
+          href={hero.ctaPrimaryHref}
+          class="flex h-12 w-full items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface transition-opacity hover:opacity-90 md:inline-flex md:h-auto md:min-h-[44px] md:min-w-[44px] md:w-auto md:px-8 md:py-4"
+        >
+          <span class="md:hidden">{ctaPrimaryMobile}</span>
+          <span class="hidden md:inline">{hero.ctaPrimary}</span>
+        </a>
+        <a
+          href={hero.ctaSecondaryHref}
+          class="flex h-12 w-full items-center justify-center rounded-lg border border-accent px-6 py-3 text-sm font-semibold text-accent transition-opacity hover:opacity-90 md:inline-flex md:h-auto md:min-h-[44px] md:min-w-[44px] md:w-auto md:border-border-light md:px-8 md:py-4 md:text-primary"
+        >
+          <span class="md:hidden">{ctaSecondaryMobile}</span>
+          <span class="hidden md:inline">{hero.ctaSecondary}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

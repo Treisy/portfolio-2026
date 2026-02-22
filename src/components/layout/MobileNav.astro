@@ -1,0 +1,125 @@
+---
+import { navLinks } from "@/data/siteConfig";
+---
+<div id="mobile-nav-drawer" class="fixed inset-0 z-50 md:hidden" aria-hidden="true" inert>
+  <!-- Backdrop (behind panel) -->
+  <button
+    type="button"
+    id="mobile-nav-close"
+    class="absolute inset-0 bg-surface/80 backdrop-blur-sm transition-opacity"
+    aria-label="Close menu"
+    tabindex="-1"
+  ></button>
+  <!-- Drawer panel (on top of backdrop) -->
+  <nav
+    id="mobile-nav-panel"
+    class="absolute right-0 top-0 z-10 flex h-full w-full max-w-[280px] flex-col gap-8 overflow-y-auto border-l border-border bg-surface p-8 pt-20 shadow-xl transition-transform duration-200 ease-out translate-x-full"
+    aria-label="Main navigation"
+  >
+    <button
+      type="button"
+      id="mobile-nav-close-btn"
+      class="absolute right-5 top-6 flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-elevated hover:text-primary active:bg-surface-elevated"
+      aria-label="Close menu"
+    >
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <div class="flex flex-col gap-6">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="mobile-nav-link text-lg font-medium text-muted transition-colors hover:text-primary"
+            data-close-on-click
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+    <a
+      href="#contact"
+      class="mobile-nav-link inline-flex w-fit items-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-surface"
+      data-close-on-click
+    >
+      Book a Call
+    </a>
+  </nav>
+</div>
+
+<script>
+  function initMobileNav() {
+    const drawer = document.getElementById("mobile-nav-drawer");
+    const panel = document.getElementById("mobile-nav-panel");
+    const openBtn = document.getElementById("mobile-nav-open");
+    const closeBtn = document.getElementById("mobile-nav-close");
+    const closeBtnInPanel = document.getElementById("mobile-nav-close-btn");
+    const links = document.querySelectorAll(".mobile-nav-link[data-close-on-click]");
+
+    if (!drawer || !panel || !openBtn) return;
+
+    let isOpen = false;
+
+    function openMenu() {
+      isOpen = true;
+      drawer?.removeAttribute("inert");
+      drawer?.setAttribute("aria-hidden", "false");
+      openBtn?.setAttribute("aria-expanded", "true");
+      panel?.classList.remove("translate-x-full");
+      document.body.style.overflow = "hidden";
+      closeBtnInPanel?.focus();
+    }
+
+    function closeMenu() {
+      if (!isOpen) return;
+      isOpen = false;
+      drawer?.setAttribute("inert", "");
+      drawer?.setAttribute("aria-hidden", "true");
+      openBtn?.setAttribute("aria-expanded", "false");
+      panel?.classList.add("translate-x-full");
+      document.body.style.overflow = "";
+      openBtn?.focus();
+    }
+
+    openBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openMenu();
+    });
+
+    if (closeBtn) closeBtn.addEventListener("click", closeMenu);
+    if (closeBtnInPanel) closeBtnInPanel.addEventListener("click", closeMenu);
+
+    links.forEach((el) => {
+      el.addEventListener("click", () => {
+        closeMenu();
+      });
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMenu();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMobileNav);
+  } else {
+    initMobileNav();
+  }
+</script>
+
+<style is:global>
+  /* When closed: hide entire drawer (including backdrop) so it doesn't cover the page on mobile */
+  #mobile-nav-drawer[aria-hidden="true"] {
+    pointer-events: none;
+    visibility: hidden;
+  }
+  #mobile-nav-drawer[aria-hidden="true"] #mobile-nav-panel {
+    pointer-events: none;
+  }
+  #mobile-nav-drawer[aria-hidden="false"] {
+    pointer-events: auto;
+    visibility: visible;
+  }
+</style>

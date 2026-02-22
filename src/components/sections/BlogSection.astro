@@ -1,0 +1,40 @@
+---
+import { getContent } from "@/lib/data/content";
+const content = await getContent();
+const { blog } = content;
+---
+<section id="blog" class="bg-surface-elevated px-6 py-16 sm:py-20 md:px-10 md:py-24 lg:px-[120px] lg:py-[100px]" aria-labelledby="blog-title">
+  <div class="mx-auto max-w-[1440px]">
+    <div class="mb-12 flex flex-col items-center gap-3 text-center sm:mb-16 sm:gap-4">
+      <p class="font-mono text-xs font-medium uppercase tracking-[0.3em] text-accent">{blog.label}</p>
+      <h2 id="blog-title" class="font-serif text-2xl font-normal text-primary sm:text-3xl md:text-4xl lg:text-[42px]">
+        {blog.title}
+      </h2>
+      <p class="max-w-[600px] text-sm text-subtle sm:text-base">
+        {blog.subtitle}
+      </p>
+    </div>
+    <div class="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+      {
+        blog.posts.map((post) => (
+          <article class="overflow-hidden rounded-2xl border border-border bg-surface transition-colors hover:border-border-light">
+            <div class="aspect-[16/10] bg-surface-elevated" />
+            <div class="flex flex-col gap-3 p-4 sm:gap-4 sm:p-6">
+              <h3 class="font-semibold text-primary">{post.title}</h3>
+              <p class="text-[14px] text-subtle sm:text-[15px]">{post.excerpt}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    <div class="mt-10 flex justify-center sm:mt-12">
+      <a
+        href={blog.viewAllHref}
+        class="inline-flex min-h-[44px] items-center justify-center gap-2.5 rounded-lg border border-accent px-6 py-3.5 text-sm font-semibold text-accent transition-opacity hover:opacity-90 sm:px-8"
+      >
+        {blog.viewAllLabel}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>

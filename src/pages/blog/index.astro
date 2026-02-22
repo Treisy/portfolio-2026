@@ -1,0 +1,80 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import BlogCard from "@/components/ui/BlogCard.astro";
+import { getContent } from "@/lib/data/content";
+
+const content = await getContent();
+const blog = content.blog;
+const title = blog.title;
+const subtitle = blog.listSubtitle ?? blog.subtitle;
+const filters = blog.filters ?? [{ id: "all", label: "All" }];
+const posts = blog.posts;
+const activeFilter = "all";
+---
+<BaseLayout title="Blog" description={subtitle.slice(0, 160)}>
+  <Header />
+
+  <main id="main-content" class="min-h-screen bg-surface">
+    <!-- Hero (Pencil: BlogListHero) - mobile: compact, tablet: 60/40 padding, desktop: 80/120 -->
+    <section class="px-5 py-10 md:px-10 md:py-14 lg:px-[120px] lg:py-[60px] lg:pb-16" aria-labelledby="blog-list-title">
+      <div class="mx-auto max-w-[1440px]">
+        <div class="flex flex-col items-center gap-4 text-center md:gap-5">
+          <p class="font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-accent md:tracking-[0.25em]">
+            {blog.label}
+          </p>
+          <h1 id="blog-list-title" class="font-serif text-3xl font-normal text-primary md:text-4xl lg:text-[40px]">
+            {title}
+          </h1>
+          <p class="max-w-[500px] text-sm leading-relaxed text-subtle md:text-base">
+            {subtitle}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter row (Pencil: FilterRow) - mobile: scroll, tablet/desktop: center -->
+    {filters.length > 0 && (
+      <section class="border-t border-border bg-surface px-5 py-4 md:px-10 lg:px-[120px]" aria-label="Filter by category">
+        <div class="mx-auto max-w-[1440px]">
+          <div class="flex justify-center overflow-x-auto pb-1 md:overflow-visible md:pb-0">
+            <div class="flex shrink-0 gap-2 md:gap-2.5">
+              {filters.map((f) => {
+                const isActive = f.id === activeFilter;
+                return (
+                  <button
+                    type="button"
+                    data-filter={f.id}
+                    class={`shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-colors md:px-4 md:py-1.5 md:text-xs ${
+                      isActive
+                        ? "bg-accent text-surface"
+                        : "border border-border bg-transparent text-muted hover:border-border-light hover:text-primary"
+                    }`}
+                    aria-pressed={isActive}
+                    aria-label={`Filter: ${f.label}`}
+                  >
+                    {f.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Articles grid (Pencil: ArticlesSection) - mobile: 1 col, tablet: 2 col, desktop: 3 col -->
+    <section class="bg-surface px-5 py-8 md:px-10 md:py-10 lg:px-[120px] lg:py-16" aria-label="Articles">
+      <div class="mx-auto max-w-[1440px]">
+        <div class="grid gap-5 sm:gap-6 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+          {posts.map((post) => (
+            <BlogCard post={post} />
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

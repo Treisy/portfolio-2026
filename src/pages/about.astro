@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import AboutHeroSection from "@/components/sections/about/AboutHeroSection.astro";
+import AboutExperienceSection from "@/components/sections/about/AboutExperienceSection.astro";
+import AboutEducationSection from "@/components/sections/about/AboutEducationSection.astro";
+import AboutSkillsSection from "@/components/sections/about/AboutSkillsSection.astro";
+import AboutCertificationsSection from "@/components/sections/about/AboutCertificationsSection.astro";
+import AboutCtaSection from "@/components/sections/about/AboutCtaSection.astro";
+import { getContent } from "@/lib/data/content";
+import { getExperience } from "@/lib/data/experience";
+import { getEducation } from "@/lib/data/education";
+import { getSkills } from "@/lib/data/skills";
+import { getCertifications } from "@/lib/data/certifications";
+
+const [content, experienceRaw, education, skills, certifications] = await Promise.all([
+  getContent(),
+  getExperience(),
+  getEducation(),
+  getSkills(),
+  getCertifications(),
+]);
+
+const experience = [...experienceRaw].sort((a, b) => b.startDate.localeCompare(a.startDate));
+
+const about = content.about;
+if (!about) {
+  throw new Error("About page content is not configured. Add 'about' to content.json.");
+}
+---
+
+<BaseLayout
+  title="About"
+  description="Treisy Jiménez — Certified Scrum Master, Project Manager, and Web Developer based in Costa Rica with 8+ years of experience leading teams and delivering results."
+>
+  <Header />
+  <main id="main-content" class="min-h-screen">
+    <AboutHeroSection about={about} />
+    <AboutExperienceSection about={about} experience={experience} />
+    <AboutEducationSection about={about} education={education} />
+    <AboutSkillsSection about={about} skills={skills} />
+    <AboutCertificationsSection about={about} certifications={certifications} />
+    <AboutCtaSection about={about} />
+  </main>
+  <Footer />
+</BaseLayout>

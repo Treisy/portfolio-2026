@@ -1,0 +1,59 @@
+---
+import { siteConfig, navLinks } from "@/data/siteConfig";
+const currentYear = new Date().getFullYear();
+---
+<footer class="border-t border-border bg-surface-elevated">
+  <div class="mx-auto max-w-[1440px] px-6 py-12 sm:py-14 md:px-10 md:py-16 lg:px-[120px]">
+    <div class="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+      <div class="flex max-w-[300px] flex-col gap-3 sm:gap-4">
+        <a href="/" class="flex items-center gap-2 font-mono text-base font-semibold tracking-[0.15em] text-primary md:gap-2.5 md:text-lg md:tracking-[0.2em]">
+          <span>TREISY JIMÉNEZ</span>
+          <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+        </a>
+        <p class="text-sm leading-relaxed text-footer">
+          Consultant specialized in agile methodologies, project management, and web development.
+        </p>
+      </div>
+      <div class="flex flex-col gap-8 sm:flex-row sm:gap-12 md:gap-20">
+        <nav class="flex flex-col gap-4" aria-label="Footer navigation">
+          <span class="text-sm font-semibold text-primary">Links</span>
+          {
+            navLinks.map((link) => (
+              <a href={link.href} class="text-sm text-muted hover:text-primary">
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="flex flex-col gap-4">
+          <span class="text-sm font-semibold text-primary">Connect</span>
+          {siteConfig.social.linkedin && (
+            <a href={siteConfig.social.linkedin} class="text-sm text-muted hover:text-primary" target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
+          )}
+          {siteConfig.social.github && (
+            <a href={siteConfig.social.github} class="text-sm text-muted hover:text-primary" target="_blank" rel="noopener noreferrer">
+              GitHub
+            </a>
+          )}
+          <a href={`mailto:${siteConfig.social.email}`} class="text-sm text-muted hover:text-primary">
+            Email
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:mt-10 md:flex-row">
+      <p class="text-center text-[13px] text-dim sm:text-left">
+        © {currentYear} Treisy Jiménez. All rights reserved.
+      </p>
+      <p class="flex items-center gap-1.5 text-[13px] text-dim">
+        Made with
+        <span class="text-accent" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </span>
+        in Costa Rica
+      </p>
+    </div>
+  </div>
+</footer>

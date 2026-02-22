@@ -1,0 +1,92 @@
+---
+import type { Content } from "@/types";
+import type { Skill } from "@/types";
+import { cn } from "@/lib/utils";
+
+interface Props {
+  about: NonNullable<Content["about"]>;
+  skills: Skill[];
+}
+const { about, skills } = Astro.props;
+const { label, title, subtitle } = about.skills;
+
+const categoryOrder: Skill["category"][] = ["management", "frontend", "backend", "devops", "tools"];
+const categoryLabels: Record<Skill["category"], string> = {
+  management: "Agile & Management",
+  frontend: "Frontend",
+  backend: "Backend",
+  devops: "DevOps",
+  tools: "Tools",
+};
+const categoryIcons: Record<Skill["category"], string> = {
+  management: "users",
+  frontend: "code",
+  backend: "server",
+  devops: "cloud",
+  tools: "folder-kanban",
+};
+
+const byCategory = categoryOrder.map((cat) => ({
+  category: cat,
+  label: categoryLabels[cat],
+  icon: categoryIcons[cat],
+  skills: skills.filter((s) => s.category === cat),
+})).filter((g) => g.skills.length > 0);
+---
+<section class="bg-surface px-5 py-14 md:px-10 md:py-16 lg:px-[120px] lg:py-[100px]" aria-labelledby="about-skills-title">
+  <div class="mx-auto max-w-[1440px] flex flex-col gap-8 md:gap-10 lg:gap-16">
+    <header class="flex flex-col items-center gap-4 text-center">
+      <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">{label}</p>
+      <h2 id="about-skills-title" class="font-serif text-3xl font-normal text-primary md:text-4xl lg:text-[42px]">
+        {title}
+      </h2>
+      <p class="max-w-[550px] text-base text-subtle">{subtitle}</p>
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-2 md:gap-6">
+      {byCategory.map((group) => (
+        <article
+          class="rounded-2xl border border-border bg-surface-elevated p-5 md:p-8 flex flex-col gap-5"
+          aria-labelledby={`skill-${group.category}`}
+        >
+          <div class="flex items-center gap-3">
+            <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/20 text-accent md:h-10 md:w-10">
+              <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                {group.icon === "users" && (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                )}
+                {group.icon === "code" && (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                )}
+                {group.icon === "server" && (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                )}
+                {group.icon === "cloud" && (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                )}
+                {group.icon === "folder-kanban" && (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                )}
+              </svg>
+            </div>
+            <h3 id={`skill-${group.category}`} class="font-serif text-lg font-normal text-primary md:text-xl">
+              {group.label}
+            </h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {group.skills.map((skill) => (
+              <span
+                class={cn(
+                  "rounded-md px-2.5 py-1 text-xs font-medium",
+                  "bg-surface border border-border text-muted"
+                )}
+              >
+                {skill.name}
+              </span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,40 @@
+---
+import type { Content } from "@/types";
+import type { Certification } from "@/types";
+
+interface Props {
+  about: NonNullable<Content["about"]>;
+  certifications: Certification[];
+}
+const { about, certifications } = Astro.props;
+const { label, title } = about.certifications;
+---
+<section class="bg-surface-elevated px-5 py-14 md:px-10 md:py-16 lg:px-[120px] lg:py-[100px]" aria-labelledby="about-cert-title">
+  <div class="mx-auto max-w-[1440px] flex flex-col gap-8 md:gap-10 lg:gap-16">
+    <header class="flex flex-col items-center gap-4 text-center">
+      <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent">{label}</p>
+      <h2 id="about-cert-title" class="font-serif text-3xl font-normal text-primary md:text-4xl lg:text-[42px]">
+        {title}
+      </h2>
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-6">
+      {certifications.map((cert) => (
+        <article
+          class="flex flex-col items-center gap-4 rounded-2xl border border-border bg-surface p-5 md:p-8 text-center md:border-accent/20"
+          aria-labelledby={`cert-${cert.name.replace(/\s+/g, "-")}`}
+        >
+          <div class="flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full bg-accent/20 text-accent">
+            <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+          </div>
+          <h3 id={`cert-${cert.name.replace(/\s+/g, "-")}`} class="font-serif text-lg font-normal text-primary md:text-xl">
+            {cert.name}
+          </h3>
+          <p class="text-sm text-subtle">{cert.issuer}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

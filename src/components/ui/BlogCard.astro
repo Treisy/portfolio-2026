@@ -1,0 +1,56 @@
+---
+interface Post {
+  title: string;
+  excerpt: string;
+  slug?: string;
+  category?: string;
+  date?: string;
+  image?: string;
+}
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const href = post.slug ? `/blog/${post.slug}` : "#";
+const hasImage = post.image;
+---
+<a
+  href={href}
+  class="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface-elevated transition-colors hover:border-border-light"
+  aria-labelledby={`blog-${post.slug ?? post.title}-title`}
+>
+  <div class="h-40 w-full shrink-0 overflow-hidden bg-surface md:h-[160px]">
+    {hasImage ? (
+      <img
+        src={post.image!}
+        alt=""
+        width={400}
+        height={160}
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
+        loading="lazy"
+      />
+    ) : (
+      <div class="flex h-full w-full items-center justify-center text-subtle/50" aria-hidden="true">
+        <svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6m4-4h-1m-1 4h2m-4 0H9m-2 0h2" /></svg>
+      </div>
+    )}
+  </div>
+  <div class="flex flex-1 flex-col gap-2.5 p-4 sm:p-5">
+    {post.category && (
+      <span class="w-fit rounded-full bg-accent/10 px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-wider text-accent">
+        {post.category}
+      </span>
+    )}
+    <h2 id={`blog-${post.slug ?? post.title}-title`} class="font-serif text-base font-normal leading-snug text-primary sm:text-lg">
+      {post.title}
+    </h2>
+    <p class="line-clamp-2 text-[13px] leading-relaxed text-subtle sm:text-sm">
+      {post.excerpt}
+    </p>
+    {post.date && (
+      <p class="mt-auto text-xs text-subtle">{post.date}</p>
+    )}
+  </div>
+</a>
